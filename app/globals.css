@@ -1,2 +1,46 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+@plugin "daisyui/theme" {
+  name: "booknook";
+  default: true;
+  color-scheme: light;
+  --color-base-100: #fffaf3;
+  --color-base-200: #f6ecdd;
+  --color-base-300: #e8d9c3;
+  --color-base-content: #2b1d14;
+  --color-primary: #9a3412;
+  --color-primary-content: #fff7ed;
+  --color-secondary: #b45309;
+  --color-secondary-content: #fff7ed;
+  --color-accent: #0f766e;
+  --color-accent-content: #f0fdfa;
+  --color-neutral: #2b1d14;
+  --color-neutral-content: #fff7ed;
+  --color-info: #0369a1;
+  --color-info-content: #f0f9ff;
+  --color-success: #15803d;
+  --color-success-content: #f0fdf4;
+  --color-warning: #d97706;
+  --color-warning-content: #fffbeb;
+  --color-error: #b91c1c;
+  --color-error-content: #fef2f2;
+  --radius-selector: 1rem;
+  --radius-field: 0.6rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 1;
+  --noise: 0;
+}
+
+body {
+  font-family: var(--font-inter), sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-playfair), serif;
+}

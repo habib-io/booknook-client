@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -11,19 +12,22 @@ import { apiFetch } from "@/lib/api";
 
 const slides = [
   {
+    image: "/hero1.jpg",
+    tag: "Your neighbourhood library",
     title: "Your Small Corner of Stories",
     text: "Discover books shared by readers like you and borrow your next favourite read.",
-    bg: "from-indigo-600 to-purple-600",
   },
   {
+    image: "/hero2.jpg",
+    tag: "Share what you love",
     title: "Share a Book, Spread the Joy",
     text: "Add your own books to BookNook so other readers can enjoy them too.",
-    bg: "from-emerald-600 to-teal-600",
   },
   {
+    image: "/hero3.jpg",
+    tag: "Simple and quick",
     title: "Borrow Today, Return Tomorrow",
     text: "Borrow a book for a few days and return it whenever you are done.",
-    bg: "from-orange-500 to-rose-500",
   },
 ];
 
@@ -34,11 +38,26 @@ const steps = [
 ];
 
 const categories = [
-  { name: "Fiction", text: "Stories that take you somewhere new." },
-  { name: "Science", text: "Facts, ideas and curious discoveries." },
-  { name: "History", text: "Learn how the world became what it is." },
-  { name: "Kids", text: "Fun reads for young readers." },
+  { name: "Fiction", text: "Stories that take you somewhere new.", icon: "📖" },
+  { name: "Science", text: "Facts, ideas and curious discoveries.", icon: "🔬" },
+  { name: "History", text: "Learn how the world became what it is.", icon: "🏛️" },
+  { name: "Kids", text: "Fun reads for young readers.", icon: "🧸" },
 ];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 30 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+function SectionTitle({ title, sub }) {
+  return (
+    <div className="mb-10 text-center">
+      <h2 className="text-3xl font-bold md:text-4xl">{title}</h2>
+      <div className="mx-auto mt-3 h-1 w-16 rounded bg-secondary"></div>
+      {sub && <p className="mx-auto mt-3 max-w-xl text-sm opacity-70">{sub}</p>}
+    </div>
+  );
+}
 
 export default function Home() {
   const [books, setBooks] = useState([]);
@@ -59,30 +78,45 @@ export default function Home() {
       {mounted ? (
         <Swiper
           modules={[Autoplay, Pagination]}
-          autoplay={{ delay: 3500, disableOnInteraction: false }}
+          autoplay={{ delay: 4500, disableOnInteraction: false }}
           pagination={{ clickable: true }}
           loop
         >
           {slides.map((s) => (
             <SwiperSlide key={s.title}>
-              <div className={`flex h-[420px] items-center justify-center bg-gradient-to-r ${s.bg} px-6 text-center text-white`}>
-                <div className="max-w-2xl">
-                  <h2 className="text-4xl font-bold md:text-5xl">{s.title}</h2>
-                  <p className="mt-4 text-lg opacity-90">{s.text}</p>
-                  <Link href="/books" className="btn mt-6 border-none bg-white text-gray-900 hover:bg-gray-100">
-                    Browse Books
-                  </Link>
+              <div
+                className="relative flex h-[520px] items-center bg-neutral bg-cover bg-center"
+                style={{ backgroundImage: `url(${s.image})` }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/25"></div>
+                <div className="relative mx-auto w-full max-w-7xl px-6 text-white">
+                  <div className="max-w-xl">
+                    <span className="mb-4 inline-block text-xs font-semibold uppercase tracking-[0.3em] text-orange-200">
+                      {s.tag}
+                    </span>
+                    <h2 className="text-4xl font-bold leading-tight md:text-6xl">{s.title}</h2>
+                    <p className="mt-5 text-lg text-white/85">{s.text}</p>
+                    <Link href="/books" className="btn btn-primary btn-lg mt-8 border-none">
+                      Browse Books
+                    </Link>
+                  </div>
                 </div>
               </div>
             </SwiperSlide>
           ))}
         </Swiper>
       ) : (
-        <div className="h-[420px] bg-base-200"></div>
+        <div className="h-[520px] bg-neutral"></div>
       )}
 
-      <section className="mx-auto max-w-7xl px-4 py-14">
-        <h2 className="mb-8 text-center text-3xl font-bold">New Arrivals</h2>
+      <motion.section
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="mx-auto max-w-7xl px-4 py-16"
+      >
+        <SectionTitle title="New Arrivals" sub="The latest books added by our readers." />
         {loading ? (
           <Spinner />
         ) : books.length === 0 ? (
@@ -95,17 +129,23 @@ export default function Home() {
           </div>
         )}
         <div className="mt-10 text-center">
-          <Link href="/books" className="btn btn-primary">See All Books</Link>
+          <Link href="/books" className="btn btn-primary btn-wide">See All Books</Link>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="bg-base-200 py-14">
-        <div className="mx-auto max-w-7xl px-4">
-          <h2 className="mb-8 text-center text-3xl font-bold">How Borrowing Works</h2>
+      <section className="bg-base-200 py-16">
+        <motion.div
+          variants={fadeUp}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="mx-auto max-w-7xl px-4"
+        >
+          <SectionTitle title="How Borrowing Works" sub="Three simple steps from shelf to your hands." />
           <div className="grid gap-6 md:grid-cols-3">
             {steps.map((s) => (
-              <div key={s.n} className="rounded-2xl bg-base-100 p-6 text-center shadow">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary text-xl font-bold text-primary-content">
+              <div key={s.n} className="rounded-2xl border border-base-300 bg-base-100 p-8 text-center shadow-sm">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-content">
                   {s.n}
                 </div>
                 <h3 className="text-xl font-semibold">{s.title}</h3>
@@ -113,24 +153,31 @@ export default function Home() {
               </div>
             ))}
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-14">
-        <h2 className="mb-8 text-center text-3xl font-bold">Top Categories</h2>
+      <motion.section
+        variants={fadeUp}
+        initial="hidden"
+        whileInView="show"
+        viewport={{ once: true }}
+        className="mx-auto max-w-7xl px-4 py-16"
+      >
+        <SectionTitle title="Top Categories" sub="Pick a shelf and start exploring." />
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {categories.map((c) => (
             <Link
               key={c.name}
               href="/books"
-              className="rounded-2xl border border-base-300 bg-base-100 p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
+              className="rounded-2xl border border-base-300 bg-base-100 p-8 text-center shadow-sm transition hover:-translate-y-1 hover:border-secondary hover:shadow-lg"
             >
+              <div className="mb-3 text-4xl">{c.icon}</div>
               <h3 className="text-xl font-semibold text-primary">{c.name}</h3>
               <p className="mt-2 text-sm opacity-80">{c.text}</p>
             </Link>
           ))}
         </div>
-      </section>
+      </motion.section>
     </div>
   );
 }
